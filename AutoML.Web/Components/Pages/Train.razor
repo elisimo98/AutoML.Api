@@ -1,0 +1,157 @@
+﻿@* @page "/train"
+@using AutoML.Web.Helpers
+@using AutoML.Web.Interfaces
+@using AutoML.Web.Models
+@rendermode InteractiveServer
+@inject Interfaces.IModelClientService AutoMLService
+
+<PageTitle>Train Your Model</PageTitle>
+
+<div class="container py-6">
+    <div class="text-center mb-6">
+        <h1 class="display-4 fw-bold text-white">Train Your Model</h1>
+        <p class="lead text-secondary mx-auto" style="max-width: 600px;">
+            Configure and train your machine learning model
+        </p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-6">
+            <div class="shadow rounded p-4 border border-grey bg-primary text-white">
+                <h4 class="font-semibold mb-2 text-white">Model Configuration</h4>
+
+                <EditForm Model="@TrainModelViewModel" OnSubmit="OnValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <MudSelect @bind-Value="TrainModelViewModel.ModelType" Label="Algorithm" OpenIcon="@Icons.Material.Filled.TypeSpecimen" AdornmentColor="Color.Secondary" Class="my-2" Variant="Variant.Filled">
+                        @foreach (Enums.ModelType type in Enum.GetValues(typeof(Enums.ModelType)))
+                        {
+                            <MudSelectItem Value="@type">@type</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="string"
+                    @bind-Value="@TrainModelViewModel.FileName"
+                    Label="File"
+                    AdornmentIcon="@Icons.Material.Filled.FileOpen"
+                    AdornmentColor="Color.Secondary"
+                    Class="my-2"
+                    Variant="Variant.Filled">
+                        @if (FileNames != null)
+                        {
+                            @foreach (var fileName in FileNames)
+                            {
+                                <MudSelectItem Value="@fileName">@fileName</MudSelectItem>
+                            }
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="string" Label="Target Column" @bind-Value="TrainModelViewModel.targetColumn" Variant="Variant.Filled" Disabled=IstargetColumnDisabled>
+                        @foreach (var column in ColumnNames)
+                        {
+                            <MudSelectItem Value="@column">@column</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSlider Disabled=IsSliderDisabled Color="Color.Secondary" @bind-Value="TrainModelViewModel.TrainingSplit" For="@(() => TrainModelViewModel.TrainingSplit)" Label="Training Split" Min="SliderMin" Max="SliderMax" Step="10" Class="text-white my-2">
+                        Training Split: @TrainModelViewModel.TrainingSplit%
+                    </MudSlider>
+
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth=true>
+                        Start Training
+                    </MudButton>
+                </EditForm>
+
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="shadow rounded p-4 border border-grey bg-primary text-white">
+                <h4 class="font-semibold mb-2 text-white">Training Status</h4>
+                @if (Result != null && Result.Results != null && Result.Results.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="text-white">
+                                <th>Model Type</th>
+                                <th>Accuracy</th>
+                                <th>Precision</th>
+                                <th>Recall</th>
+                                <th>F1 Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var result in Result.Results)
+                            {
+                                <tr class="text-white">
+                                    <td>@result.ModelType</td>
+                                    <td>@result.Accuracy</td>
+                                    <td>@result.Precision</td>
+                                    <td>@result.Recall</td>
+                                    <td>@result.F1Score</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Models.TrainModelViewModel TrainModelViewModel = new();
+
+    private IList<string> FileNames { get; set; } = new List<string>();
+    private IList<string> ColumnNames { get; set; } = new List<string>();
+
+    private bool IsSuccess;
+    private TrainModelResponse? Result;
+
+    private bool IstargetColumnDisabled = true;
+
+    private int SliderMin = 10;
+    private int SliderMax = 90;
+    private bool IsSliderDisabled = true;
+
+    private CsvDataResult? csvDataResult = null;
+
+    protected override void OnInitialized()
+    {
+        // TODO: Load available file names
+
+        FileNames = new List<string>()
+        {
+            "test.csv"
+        };
+    }
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        try
+        {
+            var trainingRation = TrainModelViewModel.TrainingSplit / 100.0;
+            Result = await AutoMLService.TrainModelAsync(
+                TrainModelViewModel.FileName,
+                trainingRation,
+                TrainModelViewModel.targetColumn,
+                TrainModelViewModel.ModelType
+            );
+
+            if (Result == null)
+            {
+                Console.WriteLine($"Failed to train model");
+            }
+
+            IsSuccess = true;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+} *@

@@ -1,0 +1,67 @@
+﻿@page "/"
+@using System.Security.Claims
+@using AutoML.Web.Data.Interfaces
+@using AutoML.Web.Interfaces
+@using AutoML.Web.Models
+@using AutoML.Web.Models.Data
+@inject IUserService UserService
+@inject IProjectService ProjectService
+@inject NavigationManager Navigation
+
+<PageTitle>Dashboard</PageTitle>
+
+@if (user == null)
+{
+    <h3>Please Login</h3>
+}
+else
+{
+    <h3>Welcome, @user!.Name</h3>
+
+    @if (projects == null)
+    {
+        <p>Loading your projects...</p>
+    }
+    else if (!projects.Any())
+    {
+        <p>You don’t have any projects yet.</p>
+        <MudButton Color="Color.Success" Variant="Variant.Text" Href="/projects/create">New Project</MudButton>
+    }
+    else
+    {
+        <h4>Your Projects</h4>
+        <ul class="list-group">
+            @foreach (var project in projects)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    @project.Name
+                    <button class="btn btn-sm btn-outline-primary"
+                            @onclick="@(() => OpenProject(project.Id))">
+                        Open
+                    </button>
+                </li>
+            }
+        </ul>
+        <br />
+        <MudButton Color="Color.Success" Variant="Variant.Text" Href="/projects/create">New Project</MudButton>
+    }
+}
+
+@code {
+    private UserViewModel? user;
+    private List<Project>? projects;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await UserService.GetCurrentUserAsync();
+        if (user != null)
+        {
+            projects = await ProjectService.GetProjectByUserIdAsync(user.Id);
+        }
+    }
+
+    private void OpenProject(long projectId)
+    {
+        Navigation.NavigateTo($"/projects/{projectId}");
+    }
+}
