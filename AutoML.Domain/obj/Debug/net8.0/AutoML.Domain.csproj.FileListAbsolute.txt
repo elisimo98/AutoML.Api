@@ -1,0 +1,11 @@
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\bin\Debug\net8.0\AutoML.Domain.deps.json
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\bin\Debug\net8.0\AutoML.Domain.dll
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\bin\Debug\net8.0\AutoML.Domain.pdb
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\obj\Debug\net8.0\AutoML.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\obj\Debug\net8.0\AutoML.Domain.AssemblyInfoInputs.cache
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\obj\Debug\net8.0\AutoML.Domain.AssemblyInfo.cs
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\obj\Debug\net8.0\AutoML.Domain.csproj.CoreCompileInputs.cache
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\obj\Debug\net8.0\AutoML.Domain.dll
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\obj\Debug\net8.0\refint\AutoML.Domain.dll
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\obj\Debug\net8.0\AutoML.Domain.pdb
+C:\Users\ellis\source\repos\AutoML.Web\AutoML.Domain\obj\Debug\net8.0\ref\AutoML.Domain.dll
