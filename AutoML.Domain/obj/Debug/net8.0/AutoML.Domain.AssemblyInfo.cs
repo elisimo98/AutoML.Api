@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutoML.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3659f2b0dc4bff22acc0a8231e4ce0a1f5fdae64")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutoML.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutoML.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
