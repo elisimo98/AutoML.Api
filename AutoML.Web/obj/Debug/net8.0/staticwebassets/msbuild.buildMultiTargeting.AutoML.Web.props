@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\AutoML.Web.props" />
-</Project>
