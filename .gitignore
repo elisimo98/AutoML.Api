@@ -1,0 +1,38 @@
+# Ignore Visual Studio temporary files, build results, and
+# user-specific files
+
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Bb]uilds/
+*.dll
+*.exe
+*.app
+*.log
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code settings
+.vscode/
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Publish output
+publish/
+out/
+
+# Others
+*.swp
+*.tmp
