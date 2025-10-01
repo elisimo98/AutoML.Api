@@ -8,6 +8,9 @@ namespace AutoML.Web.Services
     public class UserService : IUserService
     {
         private readonly AuthenticationStateProvider authStateProvider;
+        
+        // todo: get/set tenantId on login
+        private long TenantId { get; set; } = 1;
 
         public UserService(AuthenticationStateProvider authStateProvider)
         {
@@ -35,7 +38,8 @@ namespace AutoML.Web.Services
             return new UserViewModel
             {
                 Id = id,
-                Name = name
+                Name = name,
+                TenantId = this.TenantId
             };
         }
     }

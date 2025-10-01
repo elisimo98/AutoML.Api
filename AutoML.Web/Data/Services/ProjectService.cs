@@ -1,5 +1,4 @@
 ﻿using AutoML.Web.Data.Interfaces;
-using AutoML.Web.Models;
 using AutoML.Web.Models.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +28,13 @@ namespace AutoML.Web.Data.Services
             return projects;
         }
 
+        public async Task<Project?> GetProjectByIdAsync(long projectId)
+        {
+            return await context.Projects
+                .Include(p => p.Tenant)
+                .FirstOrDefaultAsync(p => p.Id == projectId);
+        }
+
         public async Task<Project> CreateProjectAsync(string name, string description, string userId)
         {
             var tenant = await context.TenantUsers
@@ -46,7 +52,8 @@ namespace AutoML.Web.Data.Services
                 Name = name,
                 Description = description,
                 TenantId = tenant.Id,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                OwnerUserId = userId
             };
 
             context.Projects.Add(project);

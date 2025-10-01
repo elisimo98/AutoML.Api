@@ -23,28 +23,34 @@ namespace AutoML.Web.Services
         }
 
         /// <inheritdoc/>
-        public async Task UploadCsvAsync(Stream fileStream, string fileName)
+        public async Task UploadCsvAsync(long tenantId, Stream fileStream, string fileName)
         {
             ArgumentNullException.ThrowIfNull(fileStream);
             ArgumentNullException.ThrowIfNullOrEmpty(fileName);
+            ArgumentNullException.ThrowIfNull(tenantId);
 
             var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
             await containerClient.CreateIfNotExistsAsync(PublicAccessType.None);
 
-            var blobClient = containerClient.GetBlobClient(fileName);
+            var blobName = $"tenant/{tenantId}/dataset/{fileName}";
+
+            var blobClient = containerClient.GetBlobClient(blobName);
 
             await blobClient.UploadAsync(fileStream, overwrite: true);
         }
 
         /// <inheritdoc/>
-        public async Task<Stream> GetCsvAsync(string fileName)
+        public async Task<Stream> GetCsvAsync(long tenantId, string fileName)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(fileName);
+            ArgumentNullException.ThrowIfNull(tenantId);
 
             var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
-            var blobClient = containerClient.GetBlobClient(fileName);
+            var blobName = $"tenant/{tenantId}/dataset/{fileName}";
+
+            var blobClient = containerClient.GetBlobClient(blobName);
 
             if (!await blobClient.ExistsAsync())
             {
@@ -56,6 +62,26 @@ namespace AutoML.Web.Services
             stream.Position = 0;
 
             return stream;
+        }
+
+        public async Task<List<string>> GetFileNamesForTenantAsync(long tenantId)
+        {
+            ArgumentNullException.ThrowIfNull(tenantId);
+
+            var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            var prefix = $"tenant/{tenantId}/dataset/";
+            var fileNames = new List<string>();
+
+            await foreach (BlobItem blobItem in containerClient.GetBlobsAsync(prefix: prefix))
+            {
+                string fullName = blobItem.Name;
+                string fileName = fullName.Substring(prefix.Length);
+
+                fileNames.Add(fileName);
+            }
+
+            return fileNames;
         }
 
     }

@@ -5,6 +5,8 @@ namespace AutoML.Web.Data.Interfaces
     public interface IProjectService
     {
         Task<List<Project>> GetProjectByUserIdAsync(string userId);
+        Task<Project?> GetProjectByIdAsync(long projectId);
         Task<Project> CreateProjectAsync(string name, string description, string userId);
+        Task UpdateProjectAsync(Project project);
     }
 }

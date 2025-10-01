@@ -1,0 +1,272 @@
+﻿@page "/model-configuration"
+@using AutoML.Domain.Interfaces
+@using AutoML.Web.Models
+@using MudBlazor
+@using System.Text
+@inject ISnackbar Snackbar
+@inject IStorageService StorageService
+
+<MudText Typo="Typo.h4" GutterBottom="true">Model Configuration</MudText>
+<MudText Typo="Typo.subtitle2" Class="mb-4">Configure and deploy your machine learning models</MudText>
+
+<MudCard Class="pa-4 mb-4 d-flex flex-column justify-content-start card-border" Elevation="0">
+    <MudCardHeader Class="d-flex flex-column align-items-start">
+        <MudText Typo="Typo.h6">Deploy New Model</MudText>
+        <MudText Typo="Typo.caption">
+            Upload your trained model and configure deployment settings
+        </MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudPaper Class="d-flex flex-column align-center justify-center pa-6"
+                  Style="border:2px dashed gray; border-radius:8px; text-align:center;">
+            <MudIcon Icon="@Icons.Material.Filled.Upload" Size="Size.Large" Color="Color.Secondary" />
+            <MudText Typo="Typo.h6">Upload Model Files</MudText>
+            <MudFileUpload T="IBrowserFile" FilesChanged="OnFileChangedAsync">
+                <ActivatorContent>
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.CloudUpload">
+                        Upload Files
+                    </MudButton>
+                </ActivatorContent>
+            </MudFileUpload>
+            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                Supported formats: .pkl, .joblib, .h5, .pt, .onnx, .tar.gz
+            </MudText>
+        </MudPaper>
+
+        @if (_isFileSelected)
+        {
+            <MudForm @ref="_form" Class="mt-4">
+                <div class="mt-4">
+                    <MudText Class="mb-2" Typo="Typo.caption">Details</MudText>
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" md="6">
+                            <MudTextField Variant="Variant.Filled"
+                                          Disabled=@(!_isFileSelected)
+                                          @bind-Value="_config.Name"
+                                          Label="Model Name"
+                                          Placeholder="Customer Churn Predictor"
+                                          For="@(() => _config.Name)"
+                                          Required="true"
+                                          RequiredError="Model Name is required." />
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudTextField Variant="Variant.Filled"
+                                          Disabled=@(!_isFileSelected)
+                                          @bind-Value="_config.Version"
+                                          Label="Version"
+                                          Placeholder="1.0.0"
+                                          For="@(() => _config.Version)"
+                                          Required="true"
+                                          RequiredError="Version is required." />
+                        </MudItem>
+                        <MudItem xs="12" md="12">
+                            <MudTextField Variant="Variant.Filled"
+                                          Disabled=@(!_isFileSelected)
+                                          @bind-Value="_config.Description"
+                                          Label="Description"
+                                          Lines="4"
+                                          Placeholder="Describe the model..."
+                                          For="@(() => _config.Description)" />
+                        </MudItem>
+                    </MudGrid>
+                </div>
+
+                <div class="mt-4">
+                    <MudText Class="mb-2" Typo="Typo.caption">Configuration</MudText>
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" md="12">
+                            <MudSlider Disabled=@(!_isFileSelected) @bind-Value="_config.TrainingSplit">Training Split : @(_config.TrainingSplit)%</MudSlider>
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudSelect Variant="Variant.Filled"
+                                       Disabled=@(!_isFileSelected)
+                                       T="string"
+                                       Label="Framework"
+                                       @bind-Value="_config.Framework"
+                                       For="@(() => _config.Framework)"
+                                       Required="true"
+                                       RequiredError="Framework is required.">
+                                @foreach (var framework in Frameworks)
+                                {
+                                    <MudSelectItem Value="@framework">@framework</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudSelect Variant="Variant.Filled"
+                                       Disabled=@(!_isFileSelected)
+                                       T="string"
+                                       Label="Model Type"
+                                       @bind-Value="_config.ModelType"
+                                       For="@(() => _config.ModelType)"
+                                       Required="true"
+                                       RequiredError="Model Type is required.">
+                                @foreach (var modelType in ModelTypes)
+                                {
+                                    <MudSelectItem Value="@modelType">@modelType</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudSelect Variant="Variant.Filled"
+                                       Disabled=@(!_isFileSelected)
+                                       T="string"
+                                       Label="Target Column"
+                                       @bind-Value="_config.TargetColumn"
+                                       For="@(() => _config.TargetColumn)"
+                                       Required="true"
+                                       RequiredError="Target Column is required.">
+                                @foreach (var column in _csvData![0])
+                                {
+                                    <MudSelectItem Value="@column">@column</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudTextField Variant="Variant.Filled"
+                                          Disabled=@(!_isFileSelected)
+                                          @bind-Value="_config.MaxTrainingEpochs"
+                                          T="int"
+                                          Label="Max Training Epochs"
+                                          Placeholder="10"
+                                          For="@(() => _config.MaxTrainingEpochs)"
+                                          Required="true"
+                                          RequiredError="Max Training Epochs is required." />
+                        </MudItem>
+                    </MudGrid>
+                </div>
+
+            </MudForm>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       Disabled=@(!_isFileSelected)
+                       OnClick="ValidateAndDeploy" Class="mt-4">
+                Train
+            </MudButton>
+        }
+
+    </MudCardContent>
+</MudCard>
+
+@code {
+    private MudForm _form;
+    private bool _isDeploying = false;
+
+    private ModelConfigViewModel _config = new()
+    {
+        Name = "",
+        Description = "",
+        Framework = "",
+        ModelType = "",
+        Version = "1.0.0",
+        Endpoint = "",
+        Environment = "Development",
+    };
+
+    private List<string[]>? _csvData;
+    private IBrowserFile? _selectedFile;
+    private bool _isFileSelected;
+    private double _slideValue = 50.0;
+
+    private async Task OnFileChangedAsync(IBrowserFile file)
+    {
+        _selectedFile = file;
+
+        using var stream = file.OpenReadStream(maxAllowedSize: 50_000_000); // limit 50MB
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+
+        _csvData = new List<string[]>();
+        var index = 0;
+        var line = await reader.ReadLineAsync();
+        while (line != null && index < 10)
+        {
+            if (!string.IsNullOrWhiteSpace(line))
+            {
+                var fields = line.Split(',');
+                _csvData.Add(fields);
+            }
+
+            line = await reader.ReadLineAsync();
+            index++;
+        }
+
+        _isFileSelected = true;
+    }
+
+    private string[] Frameworks = new[]
+    {
+        "TensorFlow","PyTorch","Scikit-Learn","XGBoost","Hugging Face","ONNX","Custom"
+    };
+
+    private string[] ModelTypes = new[]
+    {
+        "Classification","Regression","Natural Language Processing","Computer Vision",
+        "Time Series","Recommendation","Clustering","Anomaly Detection"
+    };
+
+    private string[] Environments = new[] { "Development", "Staging", "Production" };
+
+    private async Task ValidateAndDeploy()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            _isDeploying = true;
+
+            // 1. save the dataset
+            await SaveFileAsync();
+
+            // 2. record metadata in sql
+
+            // 3. send training data to python work which returns metrics and saves model file to blob
+
+            // 4. save result metadata in sql
+
+			// 5. display the metrics to user
+
+            await Task.Delay(3000);
+            _isDeploying = false;
+
+            Snackbar.Add("Model configured successfully!", Severity.Success);
+
+            _config = new ModelConfigViewModel
+            {
+                Name = "",
+                Description = "",
+                Framework = "",
+                ModelType = "",
+                Version = "1.0.0",
+                Endpoint = "",
+                Environment = "Development",
+            };
+
+            _isFileSelected = false;
+        }
+        else
+        {
+            Snackbar.Add("Please fix validation errors before deploying.", Severity.Error);
+        }
+    }
+
+    private async Task SaveFileAsync()
+    {
+        try
+        {
+            await using var stream = _selectedFile.OpenReadStream();
+            await StorageService.UploadCsvAsync(1, stream, _selectedFile.Name);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+        }
+        finally
+        {
+            Snackbar.Add("File uploaded successfully!", Severity.Success);
+            _selectedFile = null;
+            _isFileSelected = false;
+            _csvData = null;
+        }
+    }
+}

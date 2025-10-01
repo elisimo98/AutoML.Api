@@ -1,6 +1,5 @@
-﻿using AutoML.Web.Enums;
+﻿using AutoML.Domain.Models.Contracts;
 using AutoML.Web.Interfaces;
-using AutoML.Web.Models;
 
 namespace AutoML.Web.Services
 {
@@ -13,21 +12,32 @@ namespace AutoML.Web.Services
             this.client = client;
         }
 
-        public async Task<TrainModelResponse?> TrainModelAsync(string fileName, double trainingRatio, string targetColumn, ModelType modelType)
+        public async Task<TrainingResponse?> TrainModelAsync(string fileName, double trainingRatio, string targetColumn, string modelType)
         {
-            if (string.IsNullOrEmpty(fileName)) throw new ArgumentException($"'{nameof(fileName)}' cannot be null or empty.", nameof(fileName));
-            if (string.IsNullOrEmpty(targetColumn)) throw new ArgumentException($"'{nameof(targetColumn)}' cannot be null or empty.", nameof(targetColumn));
+            ArgumentException.ThrowIfNullOrEmpty(fileName);
+            ArgumentException.ThrowIfNullOrEmpty(targetColumn);
+            ArgumentException.ThrowIfNullOrEmpty(modelType);
 
-            var request = new TrainModelRequest
+            //var request = new TrainingRequest
+            //{
+            //    FileName = fileName,
+            //    SpecificModelType = modelType,
+            //    TestSplitRatio = trainingRatio,
+            //};
+
+            //var response = await client.PostAsJsonAsync("/ml/train", request);
+            //response.EnsureSuccessStatusCode();
+            //return await response.Content.ReadFromJsonAsync<TrainingResponse>();
+
+            // todo: just returna dummy response for now
+            return new TrainingResponse
             {
-                FileName = fileName,
-                SpecificModelType = modelType != ModelType.All ? modelType.ToString() : null,
-                TestSplitRatio = trainingRatio,
+                Accuracy = 0.95,
+                ModelType = modelType,
+                Precision = 0.92,
+                Recall = 0.93,
+                F1Score = 0.94
             };
-
-            var response = await client.PostAsJsonAsync("/ml/train", request);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<TrainModelResponse>();
         }
     }
 }

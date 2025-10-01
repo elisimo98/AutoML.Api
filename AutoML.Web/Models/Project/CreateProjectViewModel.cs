@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AutoML.Web.Models
+namespace AutoML.Web.Models.Project
 {
     public class CreateProjectViewModel
     {

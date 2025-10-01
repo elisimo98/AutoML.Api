@@ -30,6 +30,13 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
+builder.Services.AddDistributedMemoryCache(); // Use memory cache to store session data
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.IsEssential = true;  // Make the session cookie essential (required for GDPR compliance)
+});
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -64,7 +71,9 @@ builder.Services.AddScoped<IStorageService, BlobStorageService>();
 builder.Services.AddScoped<ITrainingDataService, TrainingDataService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<SessionService>();
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddMudServices();
 
 var app = builder.Build();
@@ -80,6 +89,8 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseSession();
 
 app.UseHttpsRedirection();
 

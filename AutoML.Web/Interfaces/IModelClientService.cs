@@ -1,10 +1,9 @@
-﻿using AutoML.Web.Enums;
-using AutoML.Web.Models;
+﻿using AutoML.Domain.Models.Contracts;
 
 namespace AutoML.Web.Interfaces
 {
     public interface IModelClientService
     {
-        Task<TrainModelResponse?> TrainModelAsync(string fileName, double trainingRatio, string targetColumn, ModelType modelType);
+        Task<TrainingResponse?> TrainModelAsync(string fileName, double trainingRatio, string targetColumn, string modelType);
     }
 }

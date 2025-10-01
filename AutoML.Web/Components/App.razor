@@ -14,10 +14,11 @@
     <HeadOutlet />
 </head>
 
-<body class="bg-dark">
-    <Routes />
+<body>
+    <Routes @rendermode="RenderMode.InteractiveServer" />
     <script src="_content/MudBlazor/MudBlazor.min.js?v=@(MudBlazor.Metadata.Version)"></script>
     <script src="_framework/blazor.web.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>
