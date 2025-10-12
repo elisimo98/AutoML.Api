@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.0.11012.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoML.Web", "AutoML.Web\AutoML.Web.csproj", "{7E822105-2662-467A-BC4C-6522D5483217}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoML.Domain", "AutoML.Domain\AutoML.Domain.csproj", "{F65AF57A-7759-40EB-88AB-D04B944BE0B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoML.Api", "AutoML.Api\AutoML.Api.csproj", "{95AB3953-2042-4418-B3AF-4505E34402B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoML.Data", "AutoML.Data\AutoML.Data.csproj", "{6B5525F5-3BB7-412D-9371-E03D3DFA225C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7E822105-2662-467A-BC4C-6522D5483217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E822105-2662-467A-BC4C-6522D5483217}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E822105-2662-467A-BC4C-6522D5483217}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E822105-2662-467A-BC4C-6522D5483217}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F65AF57A-7759-40EB-88AB-D04B944BE0B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F65AF57A-7759-40EB-88AB-D04B944BE0B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F65AF57A-7759-40EB-88AB-D04B944BE0B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F65AF57A-7759-40EB-88AB-D04B944BE0B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95AB3953-2042-4418-B3AF-4505E34402B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95AB3953-2042-4418-B3AF-4505E34402B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95AB3953-2042-4418-B3AF-4505E34402B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95AB3953-2042-4418-B3AF-4505E34402B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B5525F5-3BB7-412D-9371-E03D3DFA225C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B5525F5-3BB7-412D-9371-E03D3DFA225C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B5525F5-3BB7-412D-9371-E03D3DFA225C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B5525F5-3BB7-412D-9371-E03D3DFA225C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

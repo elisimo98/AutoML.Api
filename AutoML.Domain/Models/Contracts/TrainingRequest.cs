@@ -3,9 +3,9 @@
     public class TrainingRequest
     {
         public string FileName { get; set; } = string.Empty;
-        public double TestSplitRatio { get; set; } = 0.2f;
-        public List<List<float>> Features { get; set; } = new();
-        public List<float> Labels { get; set; } = new();
-        public string? SpecificModelType { get; set; }
+        public double TestSize { get; set; } = 0.2f;
+        public int RandomState { get; set; } = 42;
+        public string? ModelType { get; set; }
+        public required string TargetColumn { get; set; }
     }
 }

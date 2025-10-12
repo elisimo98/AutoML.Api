@@ -1,0 +1,6 @@
+@AutoML.Api_HostAddress = http://localhost:5219
+
+GET {{AutoML.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
