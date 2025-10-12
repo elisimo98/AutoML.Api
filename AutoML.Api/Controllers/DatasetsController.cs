@@ -1,4 +1,4 @@
-using AutoML.Domain.Interfaces;
+using AutoML.Api.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoML.Api.Controllers
@@ -16,14 +16,22 @@ namespace AutoML.Api.Controllers
             this.logger = logger;
         }
 
-        [HttpGet]
         [HttpGet("{datasetId}")]
         public async Task<IActionResult> GetDataset(string tenantId, string datasetId)
         {
+            if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(datasetId))
+                return BadRequest("Tenant Id and Dataset Id cannot be empty");
+
             try
             {
-                var dataset = await this.storageService.GetDatasetAsync(tenantId, datasetId);
-                return Ok(dataset);
+                var result = await storageService.GetDatasetAsync(tenantId, datasetId);
+
+                if (!result.IsSuccess)
+                    return NotFound(result.Errors);
+
+                logger.LogInformation("Dataset {DatasetId} successfully retrieved for tenant {TenantId}", datasetId, tenantId);
+
+                return File(result.Data!, "application/octet-stream", datasetId);
             }
             catch (Exception ex)
             {

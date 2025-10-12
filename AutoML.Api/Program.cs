@@ -1,7 +1,9 @@
+using AutoML.Api.Infrastructure.Interfaces;
 using AutoML.Data;
+using AutoML.Domain.Interfaces;
+using AutoML.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -34,6 +36,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("AutoML.Data")
     ));
+
+builder.Services.AddScoped<ITrainingClient, TrainingClient>();
+builder.Services.AddScoped<IStorageService, BlobStorageService>();
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using AutoML.Domain.Interfaces;
+﻿using AutoML.Api.Infrastructure.Interfaces;
+using AutoML.Api.Models;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
@@ -7,11 +8,13 @@ namespace AutoML.Web.Services
     public class BlobStorageService : IStorageService
     {
         private readonly BlobServiceClient blobServiceClient;
+        private readonly ILogger<BlobStorageService> logger;
         private readonly string containerName;
 
-        public BlobStorageService(IConfiguration configuration, BlobServiceClient blobServiceClient)
+        public BlobStorageService(IConfiguration configuration, BlobServiceClient blobServiceClient, ILogger<BlobStorageService> logger)
         {
             this.blobServiceClient = blobServiceClient;
+            this.logger = logger;
             var containerName = configuration["AzureBlobStorage:ContainerName"];
 
             if (string.IsNullOrEmpty(containerName))
@@ -23,7 +26,7 @@ namespace AutoML.Web.Services
         }
 
         /// <inheritdoc/>
-        public async Task UploadCsvAsync(long tenantId, Stream fileStream, string fileName)
+        public async Task UploadDatasetAsync(string tenantId, Stream fileStream, string fileName)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(fileName);
 
@@ -39,30 +42,38 @@ namespace AutoML.Web.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Stream> GetDatasetAsync(long tenantId, string fileName)
+        public async Task<ServiceResult<Stream>> GetDatasetAsync(string tenantId, string fileName)
         {
-            ArgumentNullException.ThrowIfNull(tenantId);
+            ArgumentNullException.ThrowIfNullOrEmpty(tenantId);
             ArgumentNullException.ThrowIfNullOrEmpty(fileName);
 
-            var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-
-            var blobName = $"tenant/{tenantId}/dataset/{fileName}";
-
-            var blobClient = containerClient.GetBlobClient(blobName);
-
-            if (!await blobClient.ExistsAsync())
+            try
             {
-                throw new FileNotFoundException($"Blob '{fileName}' not found in container '{containerName}'.");
+                var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+                var blobName = $"tenant/{tenantId}/dataset/{fileName}";
+                var blobClient = containerClient.GetBlobClient(blobName);
+
+                var exists = await blobClient.ExistsAsync();
+                if (!exists)
+                {
+                    return ServiceResult<Stream>.Failure($"Dataset '{fileName}' not found for tenant '{tenantId}'.");
+                }
+
+                var stream = new MemoryStream();
+                await blobClient.DownloadToAsync(stream);
+                stream.Position = 0;
+
+                return ServiceResult<Stream>.Success(stream);
             }
-
-            var stream = new MemoryStream();
-            await blobClient.DownloadToAsync(stream);
-            stream.Position = 0;
-
-            return stream;
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error retrieving dataset {FileName} for tenant {TenantId}", fileName, tenantId);
+                return ServiceResult<Stream>.Failure("An error occurred while retrieving the dataset.");
+            }
         }
 
-        public async Task<List<string>> GetFileNamesForTenantAsync(long tenantId)
+        /// <inheritdoc/>
+        public async Task<List<string>> GetFileNamesForTenantAsync(string tenantId)
         {
             ArgumentNullException.ThrowIfNull(tenantId);
 
@@ -80,21 +91,6 @@ namespace AutoML.Web.Services
             }
 
             return fileNames;
-        }
-
-        public Task UploadCsvAsync(string tenantId, Stream fileStream, string fileName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Stream> GetDatasetAsync(string tenantId, string fileName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<string>> GetFileNamesForTenantAsync(string tenantId)
-        {
-            throw new NotImplementedException();
         }
     }
 }
