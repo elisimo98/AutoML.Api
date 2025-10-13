@@ -1,11 +1,10 @@
 using AutoML.Api.Infrastructure.Interfaces;
-using AutoML.Data;
 using AutoML.Domain.Interfaces;
 using AutoML.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using AutoML.Data.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,12 +30,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly("AutoML.Data")
-    ));
+// Register data services
+builder.Services.AddDataServices(builder.Configuration);
 
+// Register application services
 builder.Services.AddScoped<ITrainingClient, TrainingClient>();
 builder.Services.AddScoped<IStorageService, BlobStorageService>();
 
