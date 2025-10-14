@@ -1,6 +1,6 @@
-﻿namespace AutoML.Application.Models.DTOs
+﻿namespace AutoML.Api.Models
 {
-    public class ModelConfigDto
+    public class ModelConfigResponse
     {
         public int Id { get; set; }
         public long TenantId { get; set; }
