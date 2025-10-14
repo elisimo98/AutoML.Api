@@ -20,7 +20,7 @@ namespace AutoML.Api.Controllers
 
         // GET: api/tenants/{tenantId}/modelconfig/{id}
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDataset([FromRoute] string tenantId, [FromRoute] long id)
+        public async Task<IActionResult> GetModelConfig([FromRoute] string tenantId, [FromRoute] long id)
         {
             if (string.IsNullOrEmpty(tenantId))
                 return BadRequest("Tenant Id cannot be empty");
