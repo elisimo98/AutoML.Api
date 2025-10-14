@@ -37,7 +37,7 @@ namespace AutoML.Data.Interfaces
         /// Get all ModelConfigs for a given tenant
         /// </summary>
         /// <param name="tenantExternalId">External identifier for a given tenant</param>
-        /// <returns>A collection of <see cref="ModelConfigEntity"/></returns>
-        Task<List<ModelConfigEntity>> GetByTenantIdAsync(string tenantExternalId);
+        /// <returns>A collection of <see cref="ModelConfig"/></returns>
+        Task<List<ModelConfig>> GetByTenantIdAsync(string tenantExternalId);
     }
 }

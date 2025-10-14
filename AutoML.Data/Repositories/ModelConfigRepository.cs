@@ -66,13 +66,14 @@ namespace AutoML.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<List<ModelConfigEntity>> GetByTenantIdAsync(string tenantExternalId)
+        public async Task<List<ModelConfig>> GetByTenantIdAsync(string tenantExternalId)
         {
             ArgumentException.ThrowIfNullOrEmpty(tenantExternalId);
 
             var list = await dbContext.ModelConfigs
                 .AsNoTracking()
                 .Where(mc => mc.Tenant.ExternalId == tenantExternalId)
+                .Select(mc => ModelConfigMapper.ToDomain(mc))
                 .ToListAsync();
 
             return list;

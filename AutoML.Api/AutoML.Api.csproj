@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutoML.Application\AutoML.Application.csproj" />
     <ProjectReference Include="..\AutoML.Data\AutoML.Data.csproj" />
     <ProjectReference Include="..\AutoML.Domain\AutoML.Domain.csproj" />
   </ItemGroup>

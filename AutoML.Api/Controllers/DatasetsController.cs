@@ -47,7 +47,7 @@ namespace AutoML.Api.Controllers
                 if (!result.IsSuccess)
                     return NotFound(result.Errors);
 
-                return Ok(result.Data); // e.g. list of dataset names or metadata
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {
