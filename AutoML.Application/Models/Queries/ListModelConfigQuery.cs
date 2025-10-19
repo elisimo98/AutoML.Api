@@ -3,5 +3,5 @@ using MediatR;
 
 namespace AutoML.Application.Models.Queries
 {
-    public record GetModelConfigQuery(string TenantId, long Id) : IRequest<ModelConfigDto>;
+    public record ListModelConfigQuery(string TenantId) : IRequest<List<ModelConfigDto>>;
 }

@@ -23,18 +23,26 @@ namespace AutoML.Api.Controllers
             if (string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(datasetId))
                 return BadRequest("Tenant Id and Dataset Id cannot be empty");
 
-            var result = await storageService.GetDatasetAsync(tenantId, datasetId);
+            try
+            {
+                var result = await storageService.GetDatasetAsync(tenantId, datasetId);
 
-            if (!result.IsSuccess)
-                return NotFound(result.Errors);
+                if (!result.IsSuccess)
+                    return NotFound(result.Errors);
 
-            logger.LogInformation("Dataset {DatasetId} successfully retrieved for tenant {TenantId}", datasetId, tenantId);
+                logger.LogInformation("Dataset {DatasetId} successfully retrieved for tenant {TenantId}", datasetId, tenantId);
 
-            return File(result.Data!, "application/octet-stream", datasetId);
+                return File(result.Data!, "application/octet-stream", datasetId);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error fetching dataset {DatasetId} for tenant {TenantId}", datasetId, tenantId);
+                return StatusCode(500, "An unexpected error occurred.");
+            }
         }
 
         // GET: api/tenants/{tenantId}/datasets
-        [HttpGet]
+        [HttpGet] 
         public async Task<IActionResult> GetAllDatasetNames([FromRoute] string tenantId)
         {
             if (string.IsNullOrEmpty(tenantId))

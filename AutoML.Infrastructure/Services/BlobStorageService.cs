@@ -1,20 +1,19 @@
 ﻿using AutoML.Api.Infrastructure.Interfaces;
-using AutoML.Api.Models;
+using AutoML.Domain.Models;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace AutoML.Web.Services
 {
     public class BlobStorageService : IStorageService
     {
         private readonly BlobServiceClient blobServiceClient;
-        private readonly ILogger<BlobStorageService> logger;
         private readonly string containerName;
 
-        public BlobStorageService(IConfiguration configuration, BlobServiceClient blobServiceClient, ILogger<BlobStorageService> logger)
+        public BlobStorageService(IConfiguration configuration, BlobServiceClient blobServiceClient)
         {
             this.blobServiceClient = blobServiceClient;
-            this.logger = logger;
             var containerName = configuration["AzureBlobStorage:ContainerName"];
 
             if (string.IsNullOrEmpty(containerName))
@@ -41,9 +40,8 @@ namespace AutoML.Web.Services
 
                 return ServiceResult.Success();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error deleting dataset {FileName} for tenant {TenantId}", fileName, tenantId);
                 return ServiceResult.Failure("An error occurred while delete the dataset.");
             }
         }
@@ -64,9 +62,8 @@ namespace AutoML.Web.Services
 
                 return ServiceResult.Success();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error uploading dataset {FileName} for tenant {TenantId}", fileName, tenantId);
                 return ServiceResult.Failure("An error occurred while upload the dataset.");
             }
         }
@@ -95,9 +92,8 @@ namespace AutoML.Web.Services
 
                 return ServiceResult<Stream>.Success(stream);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error retrieving dataset {FileName} for tenant {TenantId}", fileName, tenantId);
                 return ServiceResult<Stream>.Failure("An error occurred while retrieving the dataset.");
             }
         }
@@ -124,10 +120,9 @@ namespace AutoML.Web.Services
 
                 return ServiceResult<List<string>>.Success(fileNames);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                logger.LogError(ex, "Error retrieving datasets for tenant {TenantId}", tenantId);
-                return ServiceResult<List<string>>.Failure("An error occurred while retrieving all datasets.");
+                return ServiceResult<List<string>>.Failure("An error occurred while retrieving all datasets");
             }
         }
 

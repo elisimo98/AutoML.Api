@@ -10,8 +10,15 @@ namespace AutoML.Data.Mappers
             return new ModelConfig()
             {
                 Id = entity.Id,
-                Name = entity.Name,
-                TenantId = entity.TenantId
+                TenantId = entity.TenantId,
+                FileName = entity.FileName,
+                TestSize = entity.TestSize,
+                RandomState = entity.RandomState,
+                Epochs = entity.Epochs,
+                ModelType = entity.ModelType,
+                TargetColumn = entity.TargetColumn,
+                CreatedAt = entity.CreatedAt,
+                UpdatedAt = entity.UpdatedAt
             };
         }
     }

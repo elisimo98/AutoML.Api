@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoML.Data", "AutoML.Data\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoML.Application", "AutoML.Application\AutoML.Application.csproj", "{C56A58DF-E1DF-45EF-88CD-1BC77ADE79BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoML.Infrastructure", "AutoML.Infrastructure\AutoML.Infrastructure.csproj", "{710D3DAF-B120-A73F-06E3-DC0CDEECAE64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C56A58DF-E1DF-45EF-88CD-1BC77ADE79BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C56A58DF-E1DF-45EF-88CD-1BC77ADE79BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C56A58DF-E1DF-45EF-88CD-1BC77ADE79BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{710D3DAF-B120-A73F-06E3-DC0CDEECAE64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{710D3DAF-B120-A73F-06E3-DC0CDEECAE64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{710D3DAF-B120-A73F-06E3-DC0CDEECAE64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{710D3DAF-B120-A73F-06E3-DC0CDEECAE64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

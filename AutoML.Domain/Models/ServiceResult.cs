@@ -1,4 +1,4 @@
-﻿namespace AutoML.Api.Models
+﻿namespace AutoML.Domain.Models
 {
     public class ServiceResult
     {

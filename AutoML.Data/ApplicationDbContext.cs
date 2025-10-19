@@ -17,6 +17,7 @@ namespace AutoML.Data
         {
             base.OnModelCreating(builder);
 
+            // ModelConfig → Tenant (uses external ID)
             builder.Entity<ModelConfigEntity>(mc =>
             {
                 mc.HasKey(x => x.Id);
@@ -24,9 +25,10 @@ namespace AutoML.Data
                 mc.HasOne(x => x.Tenant)
                   .WithMany()
                   .HasForeignKey(x => x.TenantId)
-                  .HasPrincipalKey(t => t.Id);
+                  .HasPrincipalKey(t => t.ExternalId);
             });
 
+            // TenantUser → Tenant (uses internal ID)
             builder.Entity<TenantUserEntity>(tu =>
             {
                 tu.HasKey(x => new { x.Id, x.UserId });
@@ -40,6 +42,10 @@ namespace AutoML.Data
                   .WithMany()
                   .HasForeignKey(x => x.UserId);
             });
+
+            builder.Entity<TenantEntity>()
+                .HasIndex(t => t.ExternalId)
+                .IsUnique();
         }
     }
 

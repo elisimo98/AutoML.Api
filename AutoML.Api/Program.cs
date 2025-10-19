@@ -1,35 +1,19 @@
-using AutoML.Api.Infrastructure.Interfaces;
-using AutoML.Domain.Interfaces;
-using AutoML.Web.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using AutoML.Data.Extensions;
+using AutoML.Api.Extensions;
+using AutoML.Api.Models;
+using AutoML.Api.Validation;
 using AutoML.Application.Extensions;
+using AutoML.Data.Extensions;
+using AutoML.Infrastructure.Extensions;
+using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-});
+// Register infrastructure services
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 // Register application services
 builder.Services.AddApplicationServices(builder.Configuration);
@@ -37,9 +21,11 @@ builder.Services.AddApplicationServices(builder.Configuration);
 // Register data services
 builder.Services.AddDataServices(builder.Configuration);
 
-// Register application services
-builder.Services.AddScoped<ITrainingClient, TrainingClient>();
-builder.Services.AddScoped<IStorageService, BlobStorageService>();
+// Register FluentValidation validators
+builder.Services.AddScoped<IValidator<CreateModelConfigRequest>, CreateModelConfigRequestValidator>();
+
+// Register api services
+builder.Services.AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 

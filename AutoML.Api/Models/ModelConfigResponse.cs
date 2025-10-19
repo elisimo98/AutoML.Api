@@ -3,7 +3,11 @@
     public class ModelConfigResponse
     {
         public int Id { get; set; }
-        public long TenantId { get; set; }
-        public string Name { get; set; } = null!;
+        public string FileName { get; set; } = string.Empty;
+        public double TestSize { get; set; } = 0.2f;
+        public int RandomState { get; set; } = 42;
+        public int Epochs { get; set; } = 50;
+        public string ModelType { get; set; } = string.Empty;
+        public string TargetColumn { get; set; } = string.Empty;
     }
 }

@@ -10,8 +10,12 @@ namespace AutoML.Api.Mappers
             return new ModelConfigResponse()
             {
                 Id = dto.Id,
-                Name = dto.Name,
-                TenantId = dto.TenantId
+                FileName = dto.FileName,
+                TestSize = dto.TestSize,
+                RandomState = dto.RandomState,
+                Epochs = dto.Epochs,
+                ModelType = dto.ModelType,
+                TargetColumn = dto.TargetColumn
             };
         }
     }

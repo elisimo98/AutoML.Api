@@ -10,7 +10,7 @@ namespace AutoML.Application.Extensions
         {
             services.AddMediatR(cfg =>
             {
-                cfg.RegisterServicesFromAssemblies(typeof(UpdateModelConfigHandler).Assembly);
+                cfg.RegisterServicesFromAssemblies(typeof(CreateModelConfigHandler).Assembly);
             });
 
             return services;

@@ -1,5 +1,6 @@
 ﻿using AutoML.Domain.Interfaces;
 using AutoML.Domain.Models.Contracts;
+using System.Net.Http.Json;
 
 namespace AutoML.Web.Services
 {
@@ -12,7 +13,11 @@ namespace AutoML.Web.Services
             this.client = client;
         }
 
-        public async Task<TrainingResponse?> TrainModelAsync(string fileName, double testSize, string targetColumn, string modelType)
+        public async Task<TrainingResponse> TrainModelAsync(
+            string fileName, 
+            double testSize, 
+            string targetColumn, 
+            string modelType)
         {
             ArgumentException.ThrowIfNullOrEmpty(fileName);
             ArgumentException.ThrowIfNullOrEmpty(targetColumn);
@@ -29,7 +34,15 @@ namespace AutoML.Web.Services
 
             var response = await client.PostAsJsonAsync("/train", request);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<TrainingResponse>();
+
+            var result = await response.Content.ReadFromJsonAsync<TrainingResponse>();
+
+            if (result is null)
+            {
+                throw new InvalidDataException("The training API returned an empty or invalid response.");
+            }
+
+            return result!;
         }
     }
 }

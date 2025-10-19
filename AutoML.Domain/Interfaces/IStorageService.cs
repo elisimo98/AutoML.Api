@@ -1,4 +1,4 @@
-﻿using AutoML.Api.Models;
+﻿using AutoML.Domain.Models;
 
 namespace AutoML.Api.Infrastructure.Interfaces
 {

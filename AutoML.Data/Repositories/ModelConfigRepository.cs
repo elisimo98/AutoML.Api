@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AutoML.Data.Repositories
 {
+    /// <inheritdoc/>
     public class ModelConfigRepository : IModelConfigRepository
     {
         private readonly ApplicationDbContext dbContext;
@@ -15,14 +16,15 @@ namespace AutoML.Data.Repositories
             this.dbContext = dbContext;
         }
 
-        /// <inheritdoc/>
-        public async Task<ModelConfig?> GetByIdAsync(long id)
+        public async Task<ModelConfig?> GetByIdAsync(string tenantId, long id)
         {
             ArgumentOutOfRangeException.ThrowIfNegative(id);
+            ArgumentException.ThrowIfNullOrEmpty(tenantId);
 
             var entity = await dbContext.ModelConfigs
                 .AsNoTracking()
-                .FirstOrDefaultAsync(mc => mc.Id == id);
+                .Where(mc => mc.TenantId == tenantId && mc.Id == id)
+                .FirstOrDefaultAsync();
 
             if (entity == null)
                 return null;
@@ -30,16 +32,16 @@ namespace AutoML.Data.Repositories
             return ModelConfigMapper.ToDomain(entity);
         }
 
-        /// <inheritdoc/>
-        public async Task AddAsync(ModelConfigEntity entity)
+        public async Task<long> AddAsync(ModelConfigEntity entity)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
             await dbContext.ModelConfigs.AddAsync(entity);
             await dbContext.SaveChangesAsync();
+
+            return entity.Id;
         }
 
-        /// <inheritdoc/>
         public async Task UpdateAsync(ModelConfigEntity entity)
         {
             ArgumentNullException.ThrowIfNull(entity);
@@ -48,14 +50,15 @@ namespace AutoML.Data.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-
-        /// <inheritdoc/>
-        public async Task<bool> DeleteAsync(long id)
+        public async Task<bool> DeleteAsync(string tenantId, long id)
         {
             ArgumentOutOfRangeException.ThrowIfNegative(id);
+            ArgumentException.ThrowIfNullOrEmpty(tenantId);
 
-            var entity = await dbContext.ModelConfigs.FindAsync(id);
-            
+            var entity = await dbContext.ModelConfigs
+                .Where(mc => mc.TenantId == tenantId && mc.Id == id)
+                .FirstOrDefaultAsync();
+
             if (entity == null)
                 return false;
 
@@ -65,14 +68,13 @@ namespace AutoML.Data.Repositories
             return true;
         }
 
-        /// <inheritdoc/>
-        public async Task<List<ModelConfig>> GetByTenantIdAsync(string tenantExternalId)
+        public async Task<List<ModelConfig>> GetByTenantIdAsync(string tenantId)
         {
-            ArgumentException.ThrowIfNullOrEmpty(tenantExternalId);
+            ArgumentException.ThrowIfNullOrEmpty(tenantId);
 
             var list = await dbContext.ModelConfigs
                 .AsNoTracking()
-                .Where(mc => mc.Tenant.ExternalId == tenantExternalId)
+                .Where(mc => mc.TenantId == tenantId)
                 .Select(mc => ModelConfigMapper.ToDomain(mc))
                 .ToListAsync();
 

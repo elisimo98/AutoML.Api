@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AutoML.Data\AutoML.Data.csproj" />
+    <ProjectReference Include="..\AutoML.Infrastructure\AutoML.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

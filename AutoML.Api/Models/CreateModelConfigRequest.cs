@@ -1,9 +1,7 @@
-﻿namespace AutoML.Application.Models.DTOs
+﻿namespace AutoML.Api.Models
 {
-    public class ModelConfigDto
+    public class CreateModelConfigRequest
     {
-        public int Id { get; set; }
-        public string TenantId { get; set; } = string.Empty;
         public string FileName { get; set; } = string.Empty;
         public double TestSize { get; set; } = 0.2f;
         public int RandomState { get; set; } = 42;

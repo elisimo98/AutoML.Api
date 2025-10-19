@@ -11,6 +11,7 @@
 	<PackageReference Include="Azure.Storage.Blobs" Version="12.22.2" />
 	<PackageReference Include="Azure.Storage.Files.Shares" Version="12.20.1" />
 	<PackageReference Include="Azure.Storage.Queues" Version="12.20.1" />
+	<PackageReference Include="FluentValidation" Version="12.0.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.9" />
 	<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.9" />
 	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.9" />
@@ -21,6 +22,7 @@
     <ProjectReference Include="..\AutoML.Application\AutoML.Application.csproj" />
     <ProjectReference Include="..\AutoML.Data\AutoML.Data.csproj" />
     <ProjectReference Include="..\AutoML.Domain\AutoML.Domain.csproj" />
+    <ProjectReference Include="..\AutoML.Infrastructure\AutoML.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
