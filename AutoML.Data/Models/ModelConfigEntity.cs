@@ -16,7 +16,5 @@ namespace AutoML.Data.Models
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-
-        public TenantEntity Tenant { get; set; } = null!;
     }
 }

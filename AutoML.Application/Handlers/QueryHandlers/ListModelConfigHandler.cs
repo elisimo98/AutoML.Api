@@ -24,7 +24,7 @@ namespace AutoML.Application.Handlers.QueryHandlers
 
             logger.LogDebug("Handling {Handler} for TenantId: {Id}", nameof(ListModelConfigHandler), request.TenantId);
 
-            var modelConfigs = await repository.GetByTenantIdAsync(request.TenantId);
+            var modelConfigs = await repository.GetAllAsync();
 
             if (modelConfigs is null)
             {

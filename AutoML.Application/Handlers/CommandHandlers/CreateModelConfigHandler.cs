@@ -25,7 +25,7 @@ namespace AutoML.Application.Handlers.CommandHandlers
 
             var modelConfig = request.ToEntity();
 
-            var newId = await repository.AddAsync(modelConfig);
+            var newId = await repository.CreateAsync(modelConfig);
 
             logger.LogInformation("Successfully created ModelConfig {Id}", newId);
 

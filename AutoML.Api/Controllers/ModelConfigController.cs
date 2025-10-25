@@ -28,7 +28,7 @@ namespace AutoML.Api.Controllers
         }
 
         // GET: api/tenants/{tenantId}/modelconfig/{id}
-        [Authorize(Policy = "CanReadModels")]
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetModelConfig([FromRoute] string tenantId, [FromRoute] long id)
         {
@@ -57,9 +57,9 @@ namespace AutoML.Api.Controllers
         }
 
         // GET: api/tenants/{tenantId}/modelconfig
-        [Authorize(Policy = "CanReadModels")]
+        [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetAllDatasetNames([FromRoute] string tenantId)
+        public async Task<IActionResult> GetAllModelConfig([FromRoute] string tenantId)
         {
             if (string.IsNullOrEmpty(tenantId))
                 return BadRequest("Tenant Id cannot be empty");
@@ -85,7 +85,7 @@ namespace AutoML.Api.Controllers
         }
 
         // POST: api/tenants/{tenantId}/modelconfig
-        [Authorize(Policy = "CanWriteModels")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateModelConfig([FromRoute] string tenantId, [FromBody] CreateModelConfigRequest request)
         {
@@ -121,7 +121,7 @@ namespace AutoML.Api.Controllers
         }
 
         // DELETE: api/tenants/{tenantId}/modelconfig/{id}
-        [Authorize(Policy = "CanDeleteModels")]
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteModelConfig([FromRoute] string tenantId, [FromRoute] long id)
         {
@@ -147,8 +147,8 @@ namespace AutoML.Api.Controllers
         }
 
         // POST: api/tenants/{tenantId}/modelconfig/{id}/train
-        [Authorize(Policy = "CanTrainModels")]
-        [HttpPost]
+        [Authorize]
+        [HttpPost("train")]
         public async Task<IActionResult> Train([FromRoute] string tenantId, [FromRoute] long id)
         {
             if (string.IsNullOrEmpty(tenantId))

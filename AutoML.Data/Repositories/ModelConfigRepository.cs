@@ -1,84 +1,51 @@
 ﻿using AutoML.Data.Interfaces;
-using AutoML.Data.Mappers;
+using MongoDB.Driver;
+using Microsoft.Extensions.Options;
 using AutoML.Data.Models;
 using AutoML.Domain.Models;
-using Microsoft.EntityFrameworkCore;
+using AutoML.Data.Mappers;
 
 namespace AutoML.Data.Repositories
 {
-    /// <inheritdoc/>
     public class ModelConfigRepository : IModelConfigRepository
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly IMongoCollection<ModelConfigEntity> collection;
 
-        public ModelConfigRepository(ApplicationDbContext dbContext)
+        public ModelConfigRepository(IMongoDatabase database, IOptions<MongoDbSettings> settings)
         {
-            this.dbContext = dbContext;
+            collection = database.GetCollection<ModelConfigEntity>(settings.Value.CollectionName);
         }
 
-        public async Task<ModelConfig?> GetByIdAsync(string tenantId, long id)
+        public async Task<List<ModelConfig>> GetAllAsync()
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(id);
-            ArgumentException.ThrowIfNullOrEmpty(tenantId);
+            var results = await collection.FindAsync(_ => true);
+            var modelConfigs = await results.ToListAsync();
 
-            var entity = await dbContext.ModelConfigs
-                .AsNoTracking()
-                .Where(mc => mc.TenantId == tenantId && mc.Id == id)
-                .FirstOrDefaultAsync();
+            if (modelConfigs.Count <= 0)
+            {
+                return new List<ModelConfig>();
+            }
 
-            if (entity == null)
-                return null;
-
-            return ModelConfigMapper.ToDomain(entity);
+            return modelConfigs.ConvertAll(c => c.ToDomain());
         }
 
-        public async Task<long> AddAsync(ModelConfigEntity entity)
+        public async Task<ModelConfig?> GetAsync(long id)
         {
-            ArgumentNullException.ThrowIfNull(entity);
-
-            await dbContext.ModelConfigs.AddAsync(entity);
-            await dbContext.SaveChangesAsync();
-
-            return entity.Id;
+            var result = await collection.FindAsync(c => c.Id == id);
+            var modelConfig = await result.FirstOrDefaultAsync();
+            return modelConfig?.ToDomain();
         }
 
-        public async Task UpdateAsync(ModelConfigEntity entity)
+        public async Task<long> CreateAsync(ModelConfigEntity config)
         {
-            ArgumentNullException.ThrowIfNull(entity);
-
-            dbContext.ModelConfigs.Update(entity);
-            await dbContext.SaveChangesAsync();
+            await collection.InsertOneAsync(config);
+            return config.Id;
         }
 
-        public async Task<bool> DeleteAsync(string tenantId, long id)
-        {
-            ArgumentOutOfRangeException.ThrowIfNegative(id);
-            ArgumentException.ThrowIfNullOrEmpty(tenantId);
+        public async Task UpdateAsync(long id, ModelConfigEntity config)
+            => await collection.ReplaceOneAsync(c => c.Id == id, config);
 
-            var entity = await dbContext.ModelConfigs
-                .Where(mc => mc.TenantId == tenantId && mc.Id == id)
-                .FirstOrDefaultAsync();
-
-            if (entity == null)
-                return false;
-
-            dbContext.ModelConfigs.Remove(entity);
-            await dbContext.SaveChangesAsync();
-
-            return true;
-        }
-
-        public async Task<List<ModelConfig>> GetByTenantIdAsync(string tenantId)
-        {
-            ArgumentException.ThrowIfNullOrEmpty(tenantId);
-
-            var list = await dbContext.ModelConfigs
-                .AsNoTracking()
-                .Where(mc => mc.TenantId == tenantId)
-                .Select(mc => ModelConfigMapper.ToDomain(mc))
-                .ToListAsync();
-
-            return list;
-        }
+        public async Task DeleteAsync(long id)
+            => await collection.DeleteOneAsync(c => c.Id == id);
     }
 }

@@ -65,26 +65,28 @@ namespace AutoML.Api.Controllers
         }
 
         // POST: api/tenants/{tenantId}/datasets
-        [HttpPost]
-        public async Task<IActionResult> UploadDataset([FromRoute] string tenantId, [FromForm] IFormFile file)
-        {
-            if (string.IsNullOrEmpty(tenantId) || file == null || file.Length == 0)
-                return BadRequest("Tenant Id and file cannot be empty");
+        //[HttpPost]
+        //[Route("upload")]
+        //[Consumes("multipart/form-data")]
+        //public async Task<IActionResult> UploadDataset([FromRoute] string tenantId, [FromForm] IFormFile file)
+        //{
+        //    if (string.IsNullOrEmpty(tenantId) || file == null || file.Length == 0)
+        //        return BadRequest("Tenant Id and file cannot be empty");
 
-            try
-            {
-                using var stream = file.OpenReadStream();
-                await storageService.UploadDatasetAsync(tenantId, stream, file.FileName);
+        //    try
+        //    {
+        //        using var stream = file.OpenReadStream();
+        //        await storageService.UploadDatasetAsync(tenantId, stream, file.FileName);
 
-                logger.LogInformation("Dataset {FileName} successfully uploaded for tenant {TenantId}", file.FileName, tenantId);
-                return Ok(new { Message = "Dataset uploaded successfully" });
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Unexpected error uploading dataset {FileName} for tenant {TenantId}", file.FileName, tenantId);
-                return StatusCode(500, "An unexpected error occurred.");
-            }
-        }
+        //        logger.LogInformation("Dataset {FileName} successfully uploaded for tenant {TenantId}", file.FileName, tenantId);
+        //        return Ok(new { Message = "Dataset uploaded successfully" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.LogError(ex, "Unexpected error uploading dataset {FileName} for tenant {TenantId}", file.FileName, tenantId);
+        //        return StatusCode(500, "An unexpected error occurred.");
+        //    }
+        //}
 
         // DELETE: api/tenants/{tenantId}/datasets/{fileName}
         [HttpDelete("{fileName}")]
