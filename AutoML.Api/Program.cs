@@ -7,6 +7,8 @@ using AutoML.Infrastructure.Extensions;
 using FluentValidation;
 using Microsoft.OpenApi.Models;
 
+System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
