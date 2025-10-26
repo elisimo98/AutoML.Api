@@ -12,11 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddApplicationInsights();
-
-builder.Services.Configure<LoggerFilterOptions>(options =>
-{
-    options.MinLevel = LogLevel.Information;
-});
+builder.Services.AddApplicationInsightsTelemetry();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 builder.Services.AddControllers(); 
 
