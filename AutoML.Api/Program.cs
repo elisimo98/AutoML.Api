@@ -9,7 +9,16 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddApplicationInsights();
+
+builder.Services.Configure<LoggerFilterOptions>(options =>
+{
+    options.MinLevel = LogLevel.Information;
+});
+
+builder.Services.AddControllers(); 
 
 // Register infrastructure services
 builder.Services.AddInfrastructureServices(builder.Configuration);
