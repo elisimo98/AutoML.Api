@@ -32,6 +32,8 @@ namespace AutoML.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetModelConfig([FromRoute] string tenantId, [FromRoute] long id)
         {
+            logger.LogInformation("Received request for tenantId={TenantId}, id={Id}", tenantId, id);
+
             if (string.IsNullOrEmpty(tenantId))
                 return BadRequest("Tenant Id cannot be empty");
 
