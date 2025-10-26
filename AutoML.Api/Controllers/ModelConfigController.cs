@@ -28,7 +28,6 @@ namespace AutoML.Api.Controllers
         }
 
         // GET: api/tenants/{tenantId}/modelconfig/{id}
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetModelConfig([FromRoute] string tenantId, [FromRoute] long id)
         {
