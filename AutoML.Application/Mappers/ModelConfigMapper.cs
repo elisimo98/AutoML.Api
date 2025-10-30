@@ -13,6 +13,8 @@ namespace AutoML.Application.Mappers
             {
                 Id = domain.Id,
                 TenantId = domain.TenantId,
+                Name = domain.Name,
+                Description = domain.Description,
                 FileName = domain.FileName,
                 TestSize = domain.TestSize,
                 RandomState = domain.RandomState,
@@ -27,6 +29,8 @@ namespace AutoML.Application.Mappers
             return new ModelConfigEntity()
             {
                 TenantId = request.TenantId,
+                Name = request.Name,
+                Description = request.Description,
                 FileName = request.FileName,
                 TestSize = request.TestSize,
                 RandomState = request.RandomState,

@@ -4,6 +4,8 @@ namespace AutoML.Application.Models.Commands
 {
     public record CreateModelConfigCommand(
         string TenantId,
+        string Name,
+        string Description,
         string FileName,
         double TestSize,
         int RandomState,

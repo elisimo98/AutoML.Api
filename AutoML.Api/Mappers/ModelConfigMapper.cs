@@ -11,6 +11,8 @@ namespace AutoML.Api.Mappers
             {
                 Id = dto.Id,
                 FileName = dto.FileName,
+                Name = dto.Name,
+                Description = dto.Description,
                 TestSize = dto.TestSize,
                 RandomState = dto.RandomState,
                 Epochs = dto.Epochs,

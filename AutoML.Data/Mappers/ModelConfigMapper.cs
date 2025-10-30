@@ -11,6 +11,8 @@ namespace AutoML.Data.Mappers
             {
                 Id = entity.Id,
                 TenantId = entity.TenantId,
+                Name = entity.Name,
+                Description = entity.Description,
                 FileName = entity.FileName,
                 TestSize = entity.TestSize,
                 RandomState = entity.RandomState,

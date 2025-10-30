@@ -105,6 +105,8 @@ namespace AutoML.Api.Controllers
 
                 await mediator.Send(new CreateModelConfigCommand(
                     tenantId,
+                    request.Name,
+                    request.Description,
                     request.FileName,
                     request.TestSize,
                     request.RandomState,
