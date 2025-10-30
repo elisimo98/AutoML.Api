@@ -11,6 +11,7 @@ namespace AutoML.Application.Mappers
         {
             return new ModelConfigDto()
             {
+                Id = domain.Id,
                 TenantId = domain.TenantId,
                 Name = domain.Name,
                 Description = domain.Description,

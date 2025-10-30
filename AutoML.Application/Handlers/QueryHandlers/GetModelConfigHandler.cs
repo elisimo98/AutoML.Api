@@ -22,17 +22,17 @@ namespace AutoML.Application.Handlers.QueryHandlers
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            logger.LogDebug("Handling {Handler} for ModelConfigId: {Id}", nameof(GetModelConfigHandler), request.Name);
+            logger.LogDebug("Handling {Handler} for ModelConfigId: {Id}", nameof(GetModelConfigHandler), request.Id);
 
-            var modelConfig = await repository.GetAsync(request.Name);
+            var modelConfig = await repository.GetAsync(request.Id);
 
             if (modelConfig is null)
             {
-                logger.LogWarning("ModelConfig with ID {Id} not found", request.Name);
+                logger.LogWarning("ModelConfig with ID {Id} not found", request.Id);
                 return null;
             }
 
-            logger.LogInformation("Successfully retrieved ModelConfig with ID {Id}", request.Name);
+            logger.LogInformation("Successfully retrieved ModelConfig with ID {Id}", request.Id);
             logger.LogTrace("ModelConfig entity: {ModelConfig}", modelConfig);
 
             return modelConfig?.ToDto();

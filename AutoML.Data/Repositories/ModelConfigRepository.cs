@@ -29,9 +29,9 @@ namespace AutoML.Data.Repositories
             return modelConfigs.ConvertAll(c => c.ToDomain());
         }
 
-        public async Task<ModelConfig?> GetAsync(string name)
+        public async Task<ModelConfig?> GetAsync(string id)
         {
-            var result = await collection.FindAsync(c => c.Name == name);
+            var result = await collection.FindAsync(c => c.Id == id);
             var modelConfig = await result.FirstOrDefaultAsync();
             return modelConfig?.ToDomain();
         }
@@ -43,9 +43,9 @@ namespace AutoML.Data.Repositories
         }
 
         public async Task UpdateAsync(ModelConfigEntity config)
-            => await collection.ReplaceOneAsync(c => c.Name == config.Name, config);
+            => await collection.ReplaceOneAsync(c => c.Id == config.Id, config);
 
-        public async Task DeleteAsync(string name)
-            => await collection.DeleteOneAsync(c => c.Name == name);
+        public async Task DeleteAsync(string id)
+            => await collection.DeleteOneAsync(c => c.Id == id);
     }
 }

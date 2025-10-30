@@ -22,9 +22,9 @@ namespace AutoML.Application.Handlers.CommandHandlers
 
             logger.LogDebug("Handling {Handler} for creating ModelConfig: {ModelConfig}", nameof(DeleteModelConfigHandler), request);
 
-            await repository.DeleteAsync(request.Name);
+            await repository.DeleteAsync(request.id);
 
-            logger.LogInformation("Successfully deleted ModelConfig {Id}", request.Name);
+            logger.LogInformation("Successfully deleted ModelConfig {Id}", request.id);
         }
     }
 }
