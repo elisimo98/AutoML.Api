@@ -30,30 +30,30 @@ namespace AutoML.Api.Controllers
         // GET: api/tenants/{tenantId}/modelconfig/{id}
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetModelConfig([FromRoute] string tenantId, [FromRoute] long id)
+        public async Task<IActionResult> GetModelConfig([FromRoute] string tenantId, [FromRoute] string name)
         {
-            logger.LogInformation("Received request for tenantId={TenantId}, id={Id}", tenantId, id);
+            logger.LogInformation("Received request for tenantId={TenantId}, id={Id}", tenantId, name);
 
             if (string.IsNullOrEmpty(tenantId))
                 return BadRequest("Tenant Id cannot be empty");
 
-            if (id < 0)
+            if (string.IsNullOrEmpty(name))
                 return BadRequest("Model Config Id cannot be less than 0");
 
             try
             {
-                var result = await mediator.Send(new GetModelConfigQuery(tenantId, id));
+                var result = await mediator.Send(new GetModelConfigQuery(tenantId, name));
 
                 if (result is null)
                     return NotFound();
 
-                logger.LogInformation("Model Config {Id} successfully retrieved for tenant {TenantId}", id, tenantId);
+                logger.LogInformation("Model Config {Id} successfully retrieved for tenant {TenantId}", name, tenantId);
 
                 return Ok(result.ToResponse());
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Unexpected error fetching ModelConfig {Id} for tenant {TenantId}", id, tenantId);
+                logger.LogError(ex, "Unexpected error fetching ModelConfig {Id} for tenant {TenantId}", name, tenantId);
                 return StatusCode(500, "An unexpected error occurred.");
             }
         }
@@ -127,25 +127,25 @@ namespace AutoML.Api.Controllers
         // DELETE: api/tenants/{tenantId}/modelconfig/{id}
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteModelConfig([FromRoute] string tenantId, [FromRoute] long id)
+        public async Task<IActionResult> DeleteModelConfig([FromRoute] string tenantId, [FromRoute] string name)
         {
             if (string.IsNullOrEmpty(tenantId))
                 return BadRequest("Tenant Id cannot be empty");
 
-            if (id < 0)
+            if (string.IsNullOrEmpty(name))
                 return BadRequest("Model Config Id cannot be less than 0");
 
             try
             {
-                await mediator.Send(new DeleteModelConfigCommand(tenantId, id));
+                await mediator.Send(new DeleteModelConfigCommand(tenantId, name));
 
-                logger.LogInformation("ModelConfig {Id} successfully deleted for tenant {TenantId}", id, tenantId);
+                logger.LogInformation("ModelConfig {Id} successfully deleted for tenant {TenantId}", name, tenantId);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Unexpected error deleting ModelConfig {Id} for tenant {TenantId}", id, tenantId);
+                logger.LogError(ex, "Unexpected error deleting ModelConfig {Id} for tenant {TenantId}", name, tenantId);
                 return StatusCode(500, "An unexpected error occurred.");
             }
         }
@@ -153,25 +153,25 @@ namespace AutoML.Api.Controllers
         // POST: api/tenants/{tenantId}/modelconfig/{id}/train
         [Authorize]
         [HttpPost("train")]
-        public async Task<IActionResult> Train([FromRoute] string tenantId, [FromRoute] long id)
+        public async Task<IActionResult> Train([FromRoute] string tenantId, [FromRoute] string name)
         {
             if (string.IsNullOrEmpty(tenantId))
                 return BadRequest("Tenant Id cannot be empty");
 
-            if (id < 0)
+            if (string.IsNullOrEmpty(name))
                 return BadRequest("Model Config Id cannot be less than 0");
 
             try
             {
-                await mediator.Send(new TrainModelConfigCommand(tenantId, id));
+                await mediator.Send(new TrainModelConfigCommand(tenantId, name));
 
-                logger.LogInformation("Model Config {Id} successfully trained for tenant {TenantId}", id, tenantId);
+                logger.LogInformation("Model Config {Id} successfully trained for tenant {TenantId}", name, tenantId);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Unexpected error training ModelConfig {Id} for tenant {TenantId}", id, tenantId);
+                logger.LogError(ex, "Unexpected error training ModelConfig {Id} for tenant {TenantId}", name, tenantId);
                 return StatusCode(500, "An unexpected error occurred.");
             }
         }

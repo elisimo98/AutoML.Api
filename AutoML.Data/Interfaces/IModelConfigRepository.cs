@@ -6,9 +6,9 @@ namespace AutoML.Data.Interfaces
     public interface IModelConfigRepository
     {
         Task<List<ModelConfig>> GetAllAsync();
-        Task<ModelConfig?> GetAsync(long id);
-        Task<long> CreateAsync(ModelConfigEntity config);
-        Task UpdateAsync(long id, ModelConfigEntity config);
-        Task DeleteAsync(long id);
+        Task<ModelConfig?> GetAsync(string name);
+        Task<string> CreateAsync(ModelConfigEntity config);
+        Task UpdateAsync(ModelConfigEntity config);
+        Task DeleteAsync(string name);
     }
 }

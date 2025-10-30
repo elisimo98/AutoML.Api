@@ -3,5 +3,5 @@ using MediatR;
 
 namespace AutoML.Application.Models.Commands
 {
-    public record TrainModelConfigCommand(string TenantId, long Id) : IRequest<TrainingResponse>;
+    public record TrainModelConfigCommand(string TenantId, string Name) : IRequest<TrainingResponse>;
 }

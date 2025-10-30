@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AutoML.Application.Handlers.CommandHandlers
 {
-    public class CreateModelConfigHandler : IRequestHandler<CreateModelConfigCommand, long>
+    public class CreateModelConfigHandler : IRequestHandler<CreateModelConfigCommand>
     {
         private readonly IModelConfigRepository repository;
         private readonly ILogger<CreateModelConfigHandler> logger;
@@ -17,7 +17,7 @@ namespace AutoML.Application.Handlers.CommandHandlers
             this.logger = logger;
         }
 
-        public async Task<long> Handle(CreateModelConfigCommand request, CancellationToken cancellationToken)
+        public async Task Handle(CreateModelConfigCommand request, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(request);
 
@@ -25,11 +25,9 @@ namespace AutoML.Application.Handlers.CommandHandlers
 
             var modelConfig = request.ToEntity();
 
-            var newId = await repository.CreateAsync(modelConfig);
+            await repository.CreateAsync(modelConfig);
 
-            logger.LogInformation("Successfully created ModelConfig {Id}", newId);
-
-            return newId;
+            logger.LogInformation("Successfully created ModelConfig {Id}", modelConfig.Name);
         }
     }
 }

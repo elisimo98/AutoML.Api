@@ -29,23 +29,23 @@ namespace AutoML.Data.Repositories
             return modelConfigs.ConvertAll(c => c.ToDomain());
         }
 
-        public async Task<ModelConfig?> GetAsync(long id)
+        public async Task<ModelConfig?> GetAsync(string name)
         {
-            var result = await collection.FindAsync(c => c.Id == id);
+            var result = await collection.FindAsync(c => c.Name == name);
             var modelConfig = await result.FirstOrDefaultAsync();
             return modelConfig?.ToDomain();
         }
 
-        public async Task<long> CreateAsync(ModelConfigEntity config)
+        public async Task<string> CreateAsync(ModelConfigEntity config)
         {
             await collection.InsertOneAsync(config);
-            return config.Id;
+            return config.Name;
         }
 
-        public async Task UpdateAsync(long id, ModelConfigEntity config)
-            => await collection.ReplaceOneAsync(c => c.Id == id, config);
+        public async Task UpdateAsync(ModelConfigEntity config)
+            => await collection.ReplaceOneAsync(c => c.Name == config.Name, config);
 
-        public async Task DeleteAsync(long id)
-            => await collection.DeleteOneAsync(c => c.Id == id);
+        public async Task DeleteAsync(string name)
+            => await collection.DeleteOneAsync(c => c.Name == name);
     }
 }

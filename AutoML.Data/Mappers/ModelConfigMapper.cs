@@ -9,7 +9,6 @@ namespace AutoML.Data.Mappers
         {
             return new ModelConfig()
             {
-                Id = entity.Id,
                 TenantId = entity.TenantId,
                 Name = entity.Name,
                 Description = entity.Description,

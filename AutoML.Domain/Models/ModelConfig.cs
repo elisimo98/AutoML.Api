@@ -2,7 +2,6 @@
 {
     public class ModelConfig
     {
-        public int Id { get; set; }
         public string TenantId { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
@@ -18,7 +17,7 @@
 
         public override string? ToString()
         {
-            return base.ToString() + $"{nameof(Id)}: {Id}, " +
+            return base.ToString() +
                 $"{nameof(TenantId)}: {TenantId}, " +
                 $"{nameof(Name)}: {Name}, " +
                 $"{nameof(Description)}: {Description}, " +

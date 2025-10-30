@@ -26,10 +26,10 @@ namespace AutoML.Application.Handlers.CommandHandlers
 
             logger.LogDebug("Handling {Handler} for creating ModelConfig: {ModelConfig}", nameof(TrainModelConfigHandler), request);
 
-            var modelConfig = await repository.GetAsync(request.Id);
+            var modelConfig = await repository.GetAsync(request.Name);
             if (modelConfig is null)
             {
-                throw new KeyNotFoundException($"ModelConfig with ID {request.Id} not found.");
+                throw new KeyNotFoundException($"ModelConfig with ID {request.Name} not found.");
             }
 
             var trainingResponse = await trainingClient.TrainModelAsync(
@@ -38,7 +38,7 @@ namespace AutoML.Application.Handlers.CommandHandlers
                 modelConfig.TargetColumn, 
                 modelConfig.ModelType);
 
-            logger.LogInformation("Successfully trained ModelConfig {Id} for Tenant {TenantId}", request.Id, request.TenantId);
+            logger.LogInformation("Successfully trained ModelConfig {Id} for Tenant {TenantId}", request.Name, request.TenantId);
 
             return trainingResponse;
         }

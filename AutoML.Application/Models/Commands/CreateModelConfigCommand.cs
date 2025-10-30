@@ -12,5 +12,5 @@ namespace AutoML.Application.Models.Commands
         int Epochs,
         string ModelType,
         string TargetColumn
-    ) : IRequest<long>;
+    ) : IRequest;
 }
